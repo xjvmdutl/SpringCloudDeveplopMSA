@@ -1,0 +1,15 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: my-zuul-service
+
+zuul:
+  routes: #라우팅 설정
+    first-service:
+      path: /first-service/** #사용자 요청 이럴경우
+      url: http://localhost:8081 #해당 URL로 이동한다.
+    second-service:
+      path: /second-service/**
+      url: http://localhost:8082

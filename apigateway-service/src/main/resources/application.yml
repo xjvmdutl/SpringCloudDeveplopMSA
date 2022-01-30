@@ -1,0 +1,45 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args: #이러한 값을 타이핑 해서 사용하게 되면, 수정시 다시 빌드, 베포 과정이 필요하기 떄문에 외부에서 입력받게끔 해야 좋은 방식이다
+            baseMessage: Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
+      routes: #여러개 라우트 등록
+        - id: first-service
+#          uri: http://localhost:8081/
+          uri: lb://MY-FIRST-SERVICE
+          predicates:
+            - Path=/first-service/**
+          filters:
+#            - AddRequestHeader= first-request, first-request-header2
+#            - AddResponseHeader= first-response, first-response-header2
+             - CustomFilter
+        - id: second-service
+#          uri: http://localhost:8082/
+          uri: lb://MY-SECOND-SERVICE
+          predicates:
+            - Path=/second-service/** #해당 정보 모두가 URI 뒤에 붇게 된다. http://localhost:8082/second-service/**
+          filters:
+#            - AddRequestHeader= second-request, second-request-header2
+#            - AddResponseHeader= second-response, second-response-header2
+            - name: CustomFilter
+            - name: LoggingFilter
+              args:
+                baseMessage: Hi, there
+                preLogger: true
+                postLogger: true
