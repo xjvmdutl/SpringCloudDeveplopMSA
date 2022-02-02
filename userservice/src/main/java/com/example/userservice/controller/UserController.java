@@ -16,7 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user-service")
+//@RequestMapping("/user-service") //더이상 라우터를 위한 /user-service를 추가해줄 필요가 없다
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -62,5 +63,21 @@ public class UserController {
         UserDto userDto = userService.getUserByUserId(userId);
         ResponseUser returnValue = new ModelMapper().map(userDto, ResponseUser.class);
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
+    }
+
+    @PutMapping("/users")
+    public ResponseEntity updateUser(@RequestBody RequestUser user, @PathVariable("userId") String userId ){
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        UserDto userDto = mapper.map(user, UserDto.class);
+        userService.updateUser(userDto, userId);
+        ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
+        return ResponseEntity.status(HttpStatus.UPGRADE_REQUIRED).body(responseUser); // 성공 코드를 반환
+    }
+
+    @DeleteMapping("/users")
+    public ResponseEntity deleteUser(@PathVariable("userId") String userId){
+        userService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).build(); //200 성공 코드를 반환
     }
 }
