@@ -51,12 +51,21 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader= Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
             - Path=/user-service/** #그외 요청
             - Method=GET
           filters:
             - RemoveRequestHeader= Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
         - id: first-service
 #          uri: http://localhost:8081/
           uri: lb://MY-FIRST-SERVICE
@@ -80,5 +89,13 @@ spring:
                 baseMessage: Hi, there
                 preLogger: true
                 postLogger: true
-token:
-  secret: user_token #복호화 키
+
+
+#token:
+#  secret: user_token #복호화 키
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace
