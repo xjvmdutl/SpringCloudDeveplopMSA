@@ -32,6 +32,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable() //CSRF 필터 사용 X
                 //.authorizeRequests().antMatchers("/users/**").permitAll() //users는 모두 통과
+                .authorizeRequests().antMatchers("/actuator/**").permitAll()
+            .and()
                 .authorizeRequests().antMatchers("/**")//모든 요청에
                 //.hasIpAddress("192.168.0.5") //해당 IP만 권한 체크
                 .permitAll()
