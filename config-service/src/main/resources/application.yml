@@ -7,4 +7,6 @@ spring:
     config:
       server:
         git:
-          uri: file:///${user.home}\\IdeaProjects\\Eureka
+          uri: https://github.com/xjvmdutl/SpringCloudDeveplopMSA.git
+          default-label: master
+
