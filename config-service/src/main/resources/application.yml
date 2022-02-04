@@ -3,6 +3,12 @@ server:
 spring:
   application:
     name: config-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
   profiles:
     active: native
   cloud:
@@ -16,3 +22,9 @@ spring:
           #private일 경우 해당 정보를 입력해 주어야한다
           #username: [your username]
           #password: [your password]
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: health, busrefresh #일종의 클라이언트 역할을 본인도 하겠다
