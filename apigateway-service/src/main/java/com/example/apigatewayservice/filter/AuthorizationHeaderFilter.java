@@ -41,7 +41,7 @@ public class AuthorizationHeaderFilter extends
             }
             String authorizationHeader = request.getHeaders().get(AUTHORIZATION)
                 .get(0); //토큰을 가지고 온다
-            String jwt = authorizationHeader.replace("Bearer", "");
+            String jwt = authorizationHeader.replace("Bearer ", "");
             if (!isJwtValid(jwt)) {
                 return onError(exchange, "JWT token is not valid", UNAUTHORIZED);
             }

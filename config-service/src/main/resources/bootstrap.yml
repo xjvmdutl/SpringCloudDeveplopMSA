@@ -1,0 +1,6 @@
+encrypt:
+#  key: abcdefghijklmnopqrstuvwxyz0123456789 #해당 키값을 통해 암호화를 한다
+  key-store:
+    location: file:///${user.home}/IdeaProjects/Eureka/keystore/apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey

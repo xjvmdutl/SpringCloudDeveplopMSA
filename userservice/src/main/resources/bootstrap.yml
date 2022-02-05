@@ -2,6 +2,7 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:8888
-      name: ecommerce
-  proiles:
-    active: dev
+      name: user-service #user--service.yml 파일을 읽는다
+#   profiles:
+#    active: dev
+

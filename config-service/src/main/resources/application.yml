@@ -15,7 +15,7 @@ spring:
     config:
       server:
         native:
-          search-locations: file:///${user.home}/native-file-repo
+          search-locations: file:///${user.home}/IdeaProjects/Eureka/native-file-repo
         git:
           uri: https://github.com/xjvmdutl/SpringCloudDeveplopMSA.git
           default-label: master
