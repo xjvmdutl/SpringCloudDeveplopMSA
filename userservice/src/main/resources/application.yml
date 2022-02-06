@@ -34,7 +34,7 @@ greeting:
 
 logging:
   level:
-    com.example.userservice: DEBUG
+    com.example.userservice.client: DEBUG
 
 #토큰 유효시간, 토큰 설정
 #token:

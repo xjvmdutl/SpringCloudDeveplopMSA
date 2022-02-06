@@ -1,15 +1,24 @@
 package com.example.userservice.service;
 
+import static org.springframework.http.HttpMethod.GET;
+
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
+import feign.FeignException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,14 +26,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
+    private final RestTemplate restTemplate;
+    private final Environment env;
+    private final OrderServiceClient orderServiceClient;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -45,7 +58,31 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User not found"); //없을떄 오류 로그
         }
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
-        List<ResponseOrder> orders = new ArrayList<>();
+        //List<ResponseOrder> orders = new ArrayList<>(); //주문이 없다고 생각하고 빈 값을 넣었다
+        //Get방식으로 사용자ID를 통해 주문 정보를 읽어온다
+        //하드코딩을 하는것이 아닌 yml과 같은 속성파일에 저장하는것이 변경되더라도 수정하기가 좋다
+        //String orderUrl = "http://127.0.0.1:8000/order-service/%s/orders";
+        /* Using as rest template */
+        /*
+        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
+
+        ResponseEntity<List<ResponseOrder>> orderListResponse = restTemplate
+            .exchange(orderUrl, GET, null, new ParameterizedTypeReference<List<ResponseOrder>>() {
+
+            });
+        List<ResponseOrder> orders = orderListResponse.getBody();
+         */
+        /* Using as feign client */
+        /* Feign exception handling */
+        /*
+        List<ResponseOrder> orders = null;
+        try{
+            orders = orderServiceClient.getOrders(userId);
+        }catch (FeignException e){
+            log.error(e.getMessage());
+        }
+         */
+        List<ResponseOrder> orders = orderServiceClient.getOrders(userId);
         userDto.setOrders(orders);
         return userDto;
     }
@@ -96,9 +133,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserDetailByEmail(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
-        if(userEntity == null)
+        if (userEntity == null) {
             throw new UsernameNotFoundException(email);
-
+        }
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
         return userDto;
