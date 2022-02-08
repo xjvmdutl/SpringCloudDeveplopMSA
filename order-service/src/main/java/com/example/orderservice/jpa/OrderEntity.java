@@ -19,7 +19,7 @@ public class OrderEntity implements Serializable { // 직렬화를 넣는 이유
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, length = 120, unique = true)
+    @Column(nullable = false, length = 120)
     private String productId;
 
     @Column(nullable = false)
