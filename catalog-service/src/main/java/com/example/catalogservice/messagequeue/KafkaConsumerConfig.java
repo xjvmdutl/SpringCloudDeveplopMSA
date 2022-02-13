@@ -23,7 +23,7 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        properties.put(BOOTSTRAP_SERVERS_CONFIG, "172.18.0.101:9092");
         properties.put(GROUP_ID_CONFIG, "consumerGroupId"); //그룹을 만들어 지정할 수도 있다.
         properties.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         properties.put(VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
