@@ -10,7 +10,7 @@ token:
   secret: my_token_native_user_service_default
 
 gateway:
-  ip: localhost
+  ip: "172.18.0.5"
 
 order_service:
   url: http://ORDER-SERVICE/order-service/%s/orders
